@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FasalMovies</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      outline: 0;
+    }
+    body {
+      font-size: 12px;
+      line-height: 1.3;
+      font-family: Arial, Helvetica, Sans-Serif;
+      color: #ccc;
+      background-color: #000;
+    }
+    a {
+      color: #e7b038;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+    a img {
+      border: 0;
+    }
+    input,
+    textarea,
+    select {
+      font-size: 12px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    textarea {
+      overflow: auto;
+    }
+    .cl {
+      display: block;
+      height: 0;
+      font-size: 0;
+      line-height: 0;
+      text-indent: -4000px;
+      clear: both;
+    }
+    .text-right {
+      text-align: right;
+    }
+    h2 {
+      font-size: 10px;
+      color: #f2a223;
+      font-weight: bold;
+    }
+    h3 {
+      font-size: 14px;
+      color: #fff;
+      font-weight: bold;
+    }
+    h4 {
+      font-size: 14px;
+      color: #f3b12b;
+      font-weight: bold;
+    }
+    #shell {
+      width: 980px;
+      margin: 0 auto;
+    }
+    #header {
+      position: relative;
+    }
+    h1#logo {
+      margin: 20px;
+      font-size: 40px;
+      left: 0;
+    }
+    #sub-navigation {
+      display: block;
+      clear: right;
+      border-top: 1px dashed #666;
+      border-bottom: 1px dashed #666;
+      padding: 8px 0;
+    }
+    #sub-navigation ul {
+      list-style: none;
+    }
+    #sub-navigation ul li {
+      float: left;
+      display: inline;
+      padding-right: 23px;
+    }
+    #sub-navigation ul li a {
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      line-height: 24px;
+      text-decoration: none;
+    }
+    #sub-navigation ul li a:hover {
+      color: #f3b12b;
+    }
+    #search {
+      width: 346px;
+      margin: 0 0 0 auto;
+    }
+    #search label {
+      float: left;
+      display: inline;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      line-height: 24px;
+      padding-right: 6px;
+    }
+    #search .search-field {
+      width: 238px;
+      border: 1px solid #413e3e;
+      background: #000;
+      color: #787878;
+      padding-left: 2px;
+      height: 25px;
+    }
+    #search .search-button {
+      font-size: 14px;
+      font-weight: bold;
+      border: 0;
+      background: none;
+      color: #fff;
+      cursor: pointer;
+      border: 1px dashed white;
+      padding: 5px;
+    }
+    #main {
+      border-bottom: 1px dashed #413e3e;
+    }
+
+    .box {
+      width: 980px;
+      border-bottom: 1px dashed #413e3e;
+      padding-bottom: 21px;
+    }
+    .box .head {
+      width: 980px;
+      padding-top: 14px;
+      padding-bottom: 11px;
+    }
+    .box .head h2 {
+      float: left;
+      display: inline;
+    }
+    .box .movie {
+      width: 152px;
+      float: left;
+      padding-right: 12px;
+    }
+    .movie-image {
+      float: left;
+      width: 152px;
+      height: 214px;
+      position: relative;
+    }
+    .movie-image img {
+      width: 152px;
+      height: 214px;
+    }
+    .movie-image a {
+      float: left;
+      display: inline;
+      width: 152px;
+      height: 214px;
+      position: relative;
+      z-index: 2;
+    }
+    .play {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 152px;
+      height: 214px;
+      display: block;
+      z-index: 5;
+      cursor: pointer;
+      display: none;
+    }
+    .movie span .name {
+      font-weight: bold;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+      padding-top: 160px;
+      display: block;
+    }
+    .box .last {
+      padding: 0;
+    }
+    .rating {
+      float: left;
+      width: 152px;
+      padding-top: 8px;
+    }
+    .rating p {
+      /* float:left; */
+      font-size: 10px;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    #news {
+      width: 460px;
+      float: left;
+    }
+    #news .head {
+      width: 460px;
+      padding-top: 11px;
+      padding-bottom: 14px;
+    }
+    #news h3,
+    #coming h3 {
+      float: left;
+    }
+    #coming {
+      width: 490px;
+      float: left;
+      padding-left: 30px;
+    }
+    #coming .head {
+      width: 490px;
+      padding-top: 11px;
+      padding-bottom: 14px;
+    }
+    #coming .head strong {
+      color: #ff361a;
+    }
+    #coming .content {
+      min-height: 130px;
+      height: auto !important;
+      height: 130px;
+      padding-bottom: 20px;
+    }
+    #coming .content h4 {
+      padding-bottom: 3px;
+    }
+    .content {
+      padding-bottom: 28px;
+    }
+    .content .date {
+      font-size: 10px;
+      color: #fff;
+    }
+    .content img {
+      float: left;
+      width: 68px;
+      padding-right: 8px;
+    }
+    .content p {
+      font-size: 13px;
+      color: #fff;
+      line-height: 16px;
+    }
+    .content a {
+      font-size: 11px;
+    }
+    #footer {
+      padding: 15px 0 0 0;
+      font-size: 10px;
+    }
+    #footer,
+    #footer a {
+      color: #9c9c9c;
+      text-decoration: none;
+    }
+    #footer a:hover {
+      text-decoration: none;
+    }
+    #footer p {
+      margin: 0;
+      padding: 0 0 11px 0;
+      line-height: normal;
+      white-space: nowrap;
+    }
+    #footer .lf {
+      float: left;
+    }
+    #footer .rf {
+      float: right;
+    }
+  </style>
+  <body>
+    <div id="shell">
+      <div id="header">
+        <h1 id="logo" style="text-align: center">FasalMovies</h1>
+        <div id="sub-navigation">
+          <ul>
+            <li><a href="/home">HOME</a></li>
+            <li><a href="/playlists">PLAYLISTS</a></li>
+            <li><a href="/logout">LOGOUT</a></li>
+          </ul>
+          <div id="search">
+            <label for="search-field">SEARCH</label>
+            <input
+              type="text"
+              placeholder="Enter search here"
+              id="search-field"
+              class="blink search-field"
+            />
+            <button class="search-button" onclick="search_movie()">Go</button>
+          </div>
+        </div>
+      </div>
+      <div id="main">
+        <div id="content">
+          <div class="box">
+            <div class="head">
+              <h2>LATEST TRAILERS</h2>
+              <p class="text-right">
+                <a style="color: black; cursor: default">See all</a>
+              </p>
+            </div>
+            {% for i in range(1, 7) %}
+            <div class="movie {{ stylesList[i - 1] }}">
+              <div class="movie-image">
+                <img
+                  loading="lazy"
+                  src="{{ sources[i] }}"
+                  alt=""
+                  onclick="openMovie(this)"
+                />
+              </div>
+              <div class="rating">
+                <p style="text-align: center">{{ movie_names1[i - 1] }}</p>
+              </div>
+            </div>
+            {% endfor %}
+            <br />
+          </div>
+          <div class="box">
+            <div class="head">
+              <h2>TOP RATED</h2>
+              <p class="text-right">
+                <a style="color: black; cursor: default">See all</a>
+              </p>
+            </div>
+            {% for i in range(1, 7) %}
+            <div class="movie {{ stylesList[i - 1] }}">
+              <div class="movie-image">
+                <img
+                  loading="lazy"
+                  src="{{ sources[i + 6] }}"
+                  alt=""
+                  onclick="openMovie(this)"
+                />
+              </div>
+              <div class="rating">
+                <p style="text-align: center">{{ movie_names2[i - 1] }}</p>
+              </div>
+            </div>
+            {% endfor %}
+            <div class="cl">&nbsp;</div>
+          </div>
+        </div>
+        <div id="news">
+          <div class="head">
+            <h3>NEWS</h3>
+            <p class="text-right">
+              <a style="color: black; cursor: default">See all</a>
+            </p>
+          </div>
+          <div class="content">
+            <p class="date">12.04.09</p>
+            <h4>Disney's A Christmas Carol</h4>
+            <p>
+              &quot;Disney's A Christmas Carol,&quot; a multi-sensory thrill
+              ride re-envisioned by Academy Award&reg;-winning filmmaker Robert
+              Zemeckis, captures...
+            </p>
+          </div>
+          <div class="content">
+            <p class="date">11.04.09</p>
+            <h4>Where the Wild Things Are</h4>
+            <p>
+              Innovative director Spike Jonze collaborates with celebrated
+              author Maurice Sendak to bring one of the most beloved books of
+              all time to the big screen in &quot;Where the Wild Things
+              Are,&quot;...
+            </p>
+          </div>
+          <div class="content">
+            <p class="date">10.04.09</p>
+            <h4>The Box</h4>
+            <p>
+              Norma and Arthur Lewis are a suburban couple with a young child
+              who receive an anonymous gift bearing fatal and irrevocable
+              consequences.
+            </p>
+          </div>
+        </div>
+        <div id="coming">
+          <div class="head">
+            <h3>COMING SOON<strong>!</strong></h3>
+            <p class="text-right">
+              <a style="color: black; cursor: default">See all</a>
+            </p>
+          </div>
+          <div class="content">
+            <h4>The Princess and the Frog</h4>
+            <img
+              loading="lazy"
+              src="https://image.tmdb.org/t/p/original/yprv5PbnEksoVj2v6XEnDBg9joR.jpg"
+              alt=""
+            />
+            <p>
+              Walt Disney Animation Studios presents the musical &quot;The
+              Princess and the Frog,&quot; an animated comedy set in the great
+              city of New Orleans...
+            </p>
+          </div>
+          <div class="cl">&nbsp;</div>
+          <div class="content">
+            <h4>Fantastic Mr.Fox</h4>
+            <img
+              loading="lazy"
+              src="https://m.media-amazon.com/images/M/MV5BOGUwYTU4NGEtNDM4MS00NDRjLTkwNmQtOTkwMWMyMjhmMjdlXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg"
+              alt=""
+            />
+            <p>
+              Walt Disney Animation Studios presents the musical &quot;Fantastic
+              Mr.Fox,&quot; an animated comedy set in the great city of New
+              Orleans...
+            </p>
+          </div>
+        </div>
+        <div class="cl">&nbsp;</div>
+      </div>
+      <div id="footer">
+        <p class="lf">
+          Copyright &copy; 2024 <a href="#">FasalMovies</a> - All Rights
+          Reserved
+        </p>
+        <div style="clear: both"></div>
+      </div>
+    </div>
+    <script>
+      function openMovie(element) {
+        const movieDiv = element.parentNode.parentNode;
+        let movieName = movieDiv.querySelector(".rating p").textContent.trim();
+        console.log(movieName);
+        movieName = movieName.replace(/ /g, "+");
+        window.location.href = `/${movieName}`;
+      }
+
+      function search_movie() {
+        const inputTag = document.getElementById("search-field");
+        let query = inputTag.value;
+        if (query == "") {
+          alert("Search field is empty");
+          return;
+        }
+        query = "!@$%" + query;
+        query = query.replace(/ /g, "+");
+        window.location.href = `/${query}`;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FasalMovies</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        outline: 0;
+      }
+      body {
+        font-size: 12px;
+        line-height: 1.3;
+        font-family: Arial, Helvetica, Sans-Serif;
+        color: #ccc;
+        background-color: #000;
+      }
+      a {
+        color: #e7b038;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+      input,
+      textarea,
+      select {
+        font-size: 12px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      textarea {
+        overflow: auto;
+      }
+      .cl {
+        display: block;
+        height: 0;
+        font-size: 0;
+        line-height: 0;
+        text-indent: -4000px;
+        clear: both;
+      }
+      .text-right {
+        text-align: right;
+      }
+      h2 {
+        font-size: 10px;
+        color: #f2a223;
+        font-weight: bold;
+      }
+      h3 {
+        font-size: 14px;
+        color: #fff;
+        font-weight: bold;
+      }
+      h4 {
+        font-size: 14px;
+        color: #f3b12b;
+        font-weight: bold;
+      }
+      #shell {
+        width: 980px;
+        margin: 0 auto;
+      }
+      #header {
+        position: relative;
+      }
+      h1#logo {
+        margin: 20px;
+        font-size: 40px;
+        left: 0;
+      }
+      #sub-navigation {
+        display: block;
+        clear: right;
+        padding: 8px 0;
+      }
+      #sub-navigation ul {
+        list-style: none;
+      }
+      #sub-navigation ul li {
+        float: left;
+        display: inline;
+        padding-right: 23px;
+      }
+      #sub-navigation ul li a {
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        line-height: 24px;
+        text-decoration: none;
+      }
+      #sub-navigation ul li a:hover {
+        color: #f3b12b;
+      }
+      #main {
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .list {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #e7b038;
+        display: inline-block;
+        position: relative;
+      }
+      .list h2 {
+        font-size: 40px;
+      }
+      .list ul {
+        list-style: none;
+        padding: 0;
+      }
+      .list ul li {
+        padding: 5px 0;
+        font-size: 20px;
+      }
+      .list ul li:hover {
+        color: #e7b038;
+        cursor: pointer;
+      }
+      .create {
+        border: 1px dashed #e7b038;
+        text-align: center;
+      }
+      .delete-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #f2a223;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .remove-btn {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="shell">
+      <div id="header">
+        <h1 id="logo" style="text-align: center">Watch Lists</h1>
+        <div id="sub-navigation">
+          <ul>
+            <li><a href="/home">HOME</a></li>
+            <li><a href="/logout">LOGOUT</a></li>
+          </ul>
+        </div>
+      </div>
+      <div id="main">
+        {% for list_name, movies in info.items() %}
+        <div class="list">
+          <button
+            class="delete-button"
+            onclick="deleteWatchList('{{ list_name }}')"
+          >
+            Delete
+          </button>
+          <h2>{{ list_name }}</h2>
+          <ul>
+            {% for movie_name in movies %}
+              {% if movie_name != "" %}
+              <li onclick="openMovie('{{ movie_name }}')">{{ movie_name }}<button class="remove-btn" onclick="removeMovie('{{ list_name }}', '{{ movie_name }}')">Remove</button></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+        <div class="list create" onclick="createWatchList()">
+          <h2>Create New WatchList</h2>
+        </div>
+      </div>
+    </div>
+    <script>
+      function openMovie(movieName) {
+        console.log(movieName);
+        movieName = movieName.replace(/ /g, "+");
+        window.location.href = /${movieName};
+      }
+
+      function createWatchList() {
+        let name = prompt("Enter the WatchList's name");
+        console.log(name);
+        if (name == null) {
+          return;
+        }
+        const arrayOfListNames = document.querySelectorAll("h2");
+        for (let i = 0; i < arrayOfListNames.length; i++) {
+          if (arrayOfListNames[i].innerHTML == name) {
+            alert(The watch list ${name} already exists);
+            return;
+          }
+        }
+        const parent = document.querySelector("#main");
+        const referenceElement = document.querySelector(".create");
+        const newWatchListDiv = document.createElement("div");
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-button');
+        deleteButton.innerHTML = "Delete";
+        deleteButton.addEventListener('click', () => {
+          deleteWatchList(name);
+        })
+        const WatchListName = document.createElement("h2");
+        WatchListName.innerHTML = name;
+        const ulElement = document.createElement("ul");
+        newWatchListDiv.classList.add("list");
+        newWatchListDiv.appendChild(deleteButton);
+        newWatchListDiv.appendChild(WatchListName);
+        newWatchListDiv.appendChild(ulElement);
+        parent.insertBefore(newWatchListDiv, referenceElement);
+        fetch("/addList", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ list_name: ${name} }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Error in createWatchList function " + response.statusText
+              );
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            alert(data["status"]);
+          });
+      }
+
+      function deleteWatchList(listName) {
+        if (
+          confirm(Are you sure you want to delete the watch list ${listName}?)
+        ) {
+          const lists = document.querySelectorAll(".list");
+          lists.forEach((list) => {
+            if (list.querySelector("h2").textContent === listName) {
+              list.remove();
+            }
+          });
+          fetch("/deleteList", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ list_name: listName }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  "Error in deleteWatchList function " + response.statusText
+                );
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data);
+              alert(data["status"]);
+            });
+        }
+      }
+
+      function removeMovie(listName, movieName) {
+        if (confirm(Are you sure you want to remove ${movieName} from ${listName}?)) {
+          fetch("/removeMovie", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ list_name: listName, movie_name: movieName }),
+          })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error in removeMovie function " + response.statusText);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            alert(data["status"]);
+            window.location.reload();
+          })
+        }
+      }
+    </script>
+  </body>
+</html>

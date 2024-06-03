@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FasalMovies</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        outline: 0;
+      }
+      body {
+        font-size: 12px;
+        line-height: 1.3;
+        font-family: Arial, Helvetica, Sans-Serif;
+        color: #ccc;
+        background-color: #000;
+      }
+      a {
+        color: #e7b038;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+      input,
+      textarea,
+      select {
+        font-size: 12px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      textarea {
+        overflow: auto;
+      }
+      #shell {
+        width: 980px;
+        margin: 0 auto;
+      }
+      #header {
+        position: relative;
+      }
+      h1#logo {
+        margin: 20px;
+        font-size: 40px;
+        color: #f2a223;
+        text-align: center;
+      }
+      #sub-navigation {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-top: 1px dashed #666;
+        border-bottom: 1px dashed #666;
+      }
+      #sub-navigation ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      #sub-navigation ul li a {
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
+      }
+      #sub-navigation ul li a:hover {
+        color: #f2a223;
+      }
+      #search {
+        display: flex;
+        align-items: center;
+      }
+      #search label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        padding-right: 6px;
+      }
+      #search .search-field {
+        width: 200px;
+        border: 1px solid #413e3e;
+        background: #000;
+        color: #787878;
+        padding-left: 2px;
+        height: 25px;
+      }
+      #search .search-button {
+        font-size: 14px;
+        font-weight: bold;
+        border: 1px dashed white;
+        background: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 5px;
+      }
+      #main {
+        padding: 20px 0;
+      }
+      .movie-detail {
+        display: flex;
+        align-items: flex-start;
+        background-color: #111;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .movie-image {
+        width: 200px;
+        height: 300px;
+        margin-right: 20px;
+      }
+      .movie-image img {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+      }
+      .movie-info {
+        color: #fff;
+      }
+      .movie-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #f2a223;
+        margin-bottom: 10px;
+      }
+      .movie-info p {
+        margin-bottom: 8px;
+      }
+      .movie-ratings p {
+        margin-bottom: 5px;
+      }
+      .add-watchlist-button {
+        font-size: 14px;
+        font-weight: bold;
+        background: #f2a223;
+        color: #000;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background-color: #333;
+        border-radius: 10px;
+        padding: 20px;
+        width: 400px;
+        text-align: center;
+        color: #fff;
+      }
+      .modal-header {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      .modal-list {
+        list-style: none;
+        padding: 0;
+      }
+      .modal-list li {
+        margin: 10px 0;
+      }
+      .close-button {
+        font-size: 16px;
+        font-weight: bold;
+        background: #f2a223;
+        color: #000;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+      .fade-background {
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="shell">
+      <div id="header">
+        <h1 id="logo">FasalMovies</h1>
+        <div id="sub-navigation">
+          <ul>
+            <li><a href="/home">HOME</a></li>
+            <li><a href="/playlists">PLAYLISTS</a></li>
+            <li><a href="/logout">LOGOUT</a></li>
+          </ul>
+          <div id="search">
+            <label for="search-field">SEARCH</label>
+            <input
+              type="text"
+              placeholder="Enter search here"
+              id="search-field"
+              class="search-field"
+            />
+            <button class="search-button" onclick="searchMovie()">Go</button>
+          </div>
+        </div>
+      </div>
+      <div id="main">
+        <div id="content">
+          <div class="movie-detail">
+            <div class="movie-image">
+              <img loading="lazy" src="{{ movies['Poster'] }}" alt="Movie Poster" />
+            </div>
+            <div class="movie-info">
+              <h2 class="movie-title">{{ movies['Title'] }}</h2>
+              <p>Release Date: {{ movies['Released'] }}</p>
+              <p>Rated: {{ movies['Rated'] }}</p>
+              <p>Duration: {{ movies['Runtime'] }}</p>
+              <p>Cast: {{ movies['Actors'] }}</p>
+              <p>Director: {{ movies['Director'] }}</p>
+              <p>Genres: {{ movies['Genre'] }}</p>
+              <p>Languages: {{ movies['Language'] }}</p>
+              <p>
+                {{ movies['Plot'] }}
+              </p>
+              <div class="movie-ratings">
+                <p>IMDB: {{ movies['Ratings'][0] }}</p>
+                <p>Rotten Tomatoes: {{ movies['Ratings'][1] }}</p>
+                <p>Metacritic: {{ movies['Ratings'][2] }}</p>
+              </div>
+              <button class="add-watchlist-button" onclick="showModal()">
+                Add to Watch List
+              </button>
+              <p style="display: none;" id="imdbID">{{ movies['imdbID'] }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">Select a Watch List</div>
+        <ul class="modal-list">
+          {% for listName in lists %}
+          <li style="border: 1px solid #f2a223; border-radius: 5px; padding: 10px;" onclick="addToWatchList('{{ listName }}')">{{ listName }}</li>
+          {% endfor %}
+        </ul>
+        <button class="close-button" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+    <script>
+      function searchMovie() {
+        const inputTag = document.getElementById("search-field");
+        let query = inputTag.value;
+        if (query == "") {
+          alert("Search field is empty");
+          return;
+        }
+        query = "!@$%" + query;
+        query = query.replace(/ /g, "+");
+        window.location.href = `/${query}`
+      }
+
+      function showModal() {
+        document.getElementById("modal").style.display = "flex";
+        document.getElementById("shell").classList.add("fade-background");
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+        document.getElementById("shell").classList.remove("fade-background");
+      }
+
+      function addToWatchList(listName) {
+        const movieName = document.querySelector('.movie-title').innerHTML
+        fetch("/addMovie", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ list_name: `${listName}`, movie_name: `${movieName}` }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Error in addToWatchList function " + response.statusText
+              );
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            alert(data["status"]);
+            if (data['code'] == 0) {
+              closeModal();
+            }
+          });
+      }
+    </script>
+  </body>
+</html>
